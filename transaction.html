@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="owner_mobi/themes/mytheme.css" />
+  		<link rel="stylesheet" href="owner_mobi/themes/jquery.mobile.icons.min.css" />
+		<link rel="stylesheet" href="owner_mobi/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+		<script src="owner_mobi/jquery-2.1.4.min.js"></script>
+		<script src="owner_mobi/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		<script src="cordova.js"></script>
+		<script>
+		function sendRequest(u){
+				var obj=$.ajax({url:u,async:false});
+				var result=$.parseJSON(obj.responseText);
+				return result;	//return object
+			}
+
+		function addProduct(){
+				var p=pid.value;
+				var n=pname.value;
+				var pr=price.value;
+				var q=qty.value;
+				
+				var strUrl = "owner_mobi/action.php?cmd=1&pid="+p+"&pname="+n+"&price="+pr+"&qty="+q;
+				var objResult=sendRequest(strUrl);
+				if(objResult.result==1){
+					alert("successfully saved.");
+				}
+			}
+
+			function scan(){
+			cordova.plugins.barcodeScanner.scan(
+	      		function (result) {
+	      			var p = result.text;
+	                var strUrl = "owner_mobi/action.php?cmd=4&pid="+p;
+	                var objResult=sendRequest(strUrl);
+					if(objResult.result==1){
+						alert("successful.");
+						$("#pname").val(objResult.product['pname']);
+						$("#price").val(objResult.product['price']);						
+					}
+	      		}, 
+	      		function (error) {
+	          		alert("Scanning failed: " + error);
+	      		}
+   			);
+		}
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="pageone" data-theme="c">
+			<div data-role="header">
+				<!-- <a href="#pageone" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Home</a> -->
+				<h1>POS</h1>
+				<a href="#" data-role="button" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check" onclick="addProduct()">Save</a>
+
+				<div data-role="navbar">
+					<ul>
+						<li><a href="currentView.html" data-icon="home" data-transition="pop">Dailies</a></li>
+						<li><a href="transaction.html" data-icon="plus" class="ui-btn-active" data-transition="flip" >Transaction</a></li>
+						<!-- <li><a href="edit.html" data-icon="edit" data-transition="fade">Edit</a></li> -->
+					</ul>
+				</div>
+			</div>
+
+			<div role="main" class="ui-content">
+
+				<form method="post">
+					<div data-role="fieldcontain" >
+						<!-- <div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div> -->
+						<div>
+							<label for="sid">Sale ID</label>
+							<label name="sid" id="sid"></label>
+						</div>
+						
+						<!-- <input type="text" name="pid" id="pid"> -->
+						<!-- <div>
+							<label for="price">Product Price</label>
+							<label name="price" id="price"></label>
+						</div> -->
+						
+						<!-- <input type="text" name="pname" id="pname"> -->
+						<!-- <div>
+							<label for="qty">Quantity</label>
+							<input type="text" name="qty" id="qty">
+						</div> -->
+						
+						<div>
+							<label for="pnum">Phone Number</label>
+							<input type="tel" name="pnum" placeholder="233123456789" id="pnum">
+						</div>
+
+						<div>
+							<p>Pick Date<input type="date" id="datep" name="datep"></p>
+						</div>
+
+						<a href="#popupQty" data-rel="popup" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-forward">Record</a>
+						<a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star">Done</a>
+						<a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star">Receipt</a>
+						
+						<div data-role="popup" id="popupQty" data-theme="a" class="ui-corner-all">
+							<form>
+								<div style="padding:10px 20px;">
+									<h3>Enter quantity</h3>
+
+									<div>
+										<div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div>
+									</div>
+
+									<div>
+										<label for="sid">Sale ID</label>
+										<label name="sid" id="sid"></label>
+									</div>
+									
+									<div>
+										<label for="pname">Product Name</label>
+										<label name="pname" id="pname"></label>
+									</div>
+									<div>
+										<label for="price">Product Price</label>
+										<label name="price" id="price"></label>
+									</div>
+									<div>
+										<label for="qty" class="ui-hidden-accessible">Quantity:</label>
+										<input type="number" name="qty" id="qty" value="" placeholder="quantity" data-theme="a">
+									</div>
+									
+									<button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Save</button>
+								</div>
+							</form>
+						</div> 
+					</div>
+			</form>
+			</div>
+			<div data-role="footer">
+				<h3>Inventory</h3>
+			</div>
+		</div>
+	</body>
+</html>
