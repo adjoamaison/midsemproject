@@ -14,36 +14,133 @@
 				var result=$.parseJSON(obj.responseText);
 				return result;	//return object
 			}
+			var transid;
 
-		function addProduct(){
-				var p=pid.value;
-				var n=pname.value;
-				var pr=price.value;
-				var q=qty.value;
+		function addSale(){
+				var s=transid;
+				var n=$("#pname").html();
+				var pr=$("#price").html();
+				var q=$("#qty").val();
+				alert(q);
+				// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=7&sid="+s+
 				
-				var strUrl = "owner_mobi/action.php?cmd=1&pid="+p+"&pname="+n+"&price="+pr+"&qty="+q;
+
+				// 	"&pname="+n+"&price="+pr+"&qty="+q;
+				var strUrl = "response.php?cmd=7&sid="+s+
+					"&pname="+n+"&price="+pr+"&qty="+q;
 				var objResult=sendRequest(strUrl);
 				if(objResult.result==1){
 					alert("successfully saved.");
 				}
-			}
 
-			function scan(){
+				var dis="";
+				dis += "<a href='#'' class='ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star' onclick='addTrans()'>Done</a>";
+				dis+= "<a href='#rec' class='ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star'>Receipt</a>";
+				$("#btn").html(dis);
+		}
+
+		function addTrans(){
+
+			var d = new Date();
+			var tdate = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+			var timeT = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+			var p=pnum.value;
+
+			$("#date").html(tdate);
+			$("#time").html(timeT);
+
+				// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&pnum="+p+"&date="+tdate+"&time="+timeT;
+				var strUrl = "response.php?cmd=8&pnum="+p+"&date="+tdate+"&time="+timeT;
+				var objResult=sendRequest(strUrl);
+				if(objResult.result==1){
+					alert("successfully saved.");
+				}
+		}
+		
+
+		function genId(){
+			// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=6";
+			var strUrl = "response.php?cmd=6";
+			var objResult=sendRequest(strUrl);
+			// alert(objResult.result);
+			if(objResult.result==1){
+				transid = objResult.pass;
+				$("#tid").html(transid);
+				// alert("jdshfte");
+				// alert(transid+"tid");
+			}
+		}
+
+		$(document).ready(genId());
+
+
+		function genReceipt(){
+			var strUrl = "response.php?cmd=9&sid="+id;
+			var objResult=sendRequest(strUrl);
+			if(objResult.result==1){
+						// alert(objResult.product[0]['pname']);
+				$("#pname").html(objResult.product[0]['pname']);
+				$("#price").html(objResult.product[0]['price']);
+			}
+		}
+
+		function scan(){
+			// var strUrl = "response.php?cmd=4&pid="+1;
+	  //               var objResult=sendRequest(strUrl);
+			// 		if(objResult.result==1){
+			// 			// alert(objResult.product[0]['pname']);
+			// 			$("#pname").html(objResult.product[0]['pname']);
+			// 			$("#price").html(objResult.product[0]['price']);
+			// 		}
 			cordova.plugins.barcodeScanner.scan(
 	      		function (result) {
 	      			var p = result.text;
-	                var strUrl = "owner_mobi/action.php?cmd=4&pid="+p;
+	                // var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=4&pid="+p;
+	                var strUrl = "response.php?cmd=4&pid="+p;
 	                var objResult=sendRequest(strUrl);
 					if(objResult.result==1){
-						alert("successful.");
-						$("#pname").val(objResult.product['pname']);
-						$("#price").val(objResult.product['price']);						
+						// alert("successful.");
+						$("#pname").val(objResult.product[0]['pname']);
+						$("#price").val(objResult.product[0]['price']);						
 					}
 	      		}, 
 	      		function (error) {
 	          		alert("Scanning failed: " + error);
 	      		}
    			);
+		}
+
+		function receipt(){
+			var id=transid;
+			var strUrl = "response.php?cmd=9&sid=";+id;
+	            var objResult=sendRequest(strUrl);
+	            alert("obj "+objResult.result);
+				if(objResult.result==1){
+					var list = "";
+					var total ="";
+					alert(objResult.sale.length+" length");
+					for(var i = 0; i < objResult.sale.length; i++){
+						// alert("kjdsnfl");
+						list += "<li class='ui-li-has-icon'><a href='#'>";
+						// list+="somethingt";
+						// console.log("we+list");
+						list += "<h2>"+objResult.sale[i].pname+"</h2>";
+						list += "<p>"+objResult.sale[i].price+"</p></a>";
+						list += "<p>"+objResult.sale[i].qty+"</p></a></li>";
+						total += (objResult.sale[i]['price'] * objResult.sale[i]['qty']);
+					}
+					// alert(list);
+					$("#rec").html(list);
+					var strUrl = "response.php?cmd=10&sid="+id+"&total="+total;
+					// var strUrl = "response.php?cmd=10&sid=0STPF&total="+total;
+				var objResult=sendRequest(strUrl);
+				if(objResult.result==1){
+					alert(total);
+					$("#total").html("GHC "+total);
+				}
+				}
+			
+
 		}
 		</script>
 	</head>
@@ -52,11 +149,11 @@
 			<div data-role="header">
 				<!-- <a href="#pageone" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Home</a> -->
 				<h1>POS</h1>
-				<a href="#" data-role="button" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check" onclick="addProduct()">Save</a>
+				<!-- <a href="#" data-role="button" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check" onclick="addProduct()">Save</a> -->
 
 				<div data-role="navbar">
 					<ul>
-						<li><a href="currentView.html" data-icon="home" data-transition="pop">Dailies</a></li>
+						<li><a href="index.html" data-icon="home" data-transition="pop">Dailies</a></li>
 						<li><a href="transaction.html" data-icon="plus" class="ui-btn-active" data-transition="flip" >Transaction</a></li>
 						<!-- <li><a href="edit.html" data-icon="edit" data-transition="fade">Edit</a></li> -->
 					</ul>
@@ -68,10 +165,11 @@
 				<form method="post">
 					<div data-role="fieldcontain" >
 						<!-- <div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div> -->
-						<div>
-							<label for="sid">Sale ID</label>
-							<label name="sid" id="sid"></label>
-						</div>
+						<!-- <div>
+							<label for="tid">Transresponse ID</label>
+							 <input type="text" name="tid" id="tid" ><disabled> 
+							<h5 name="tid" id="tid"></h5>
+						</div> -->
 						
 						<div>
 							<label for="pnum">Phone Number</label>
@@ -79,14 +177,22 @@
 						</div>
 
 						<div>
-							<p>Date<input type="date" id="datep" name="datep"></p>
+							<span>Date:</span>
+							<span id="date"></span>
 						</div>
 
-						<a href="#popupQty" data-rel="popup" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-forward">Record</a>
-						<a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star">Done</a>
-						<a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star">Receipt</a>
+						<div>
+							<span>Time:</span>
+							<span id="time"></span>
+						</div>
 						
+						<a href="#popupQty" data-rel="popup" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-forward" data-role="button" onclick="receipt()">Record Item</a>
+						<div id="btn">
+						<!-- <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star" onclick="addTrans()">Done</a> -->
+						<!-- <a href="receipt.html?transid=" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star">Receipt</a> -->
+						</div>
 						<div data-role="popup" id="popupQty" data-theme="a" class="ui-corner-all">
+						<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 							<form>
 								<div style="padding:10px 20px;">
 									<h3>Enter quantity</h3>
@@ -95,28 +201,67 @@
 										<div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div>
 									</div>
 
-									<div>
+									<!-- <div>
 										<label for="sid">Sale ID</label>
 										<label name="sid" id="sid"></label>
-									</div>
+									</div> -->
 									
 									<div>
-										<label for="pname">Product Name</label>
-										<label name="pname" id="pname"></label>
+										<span><b>Product Name:</b></span>
+										<span name="pname" id="pname"></span>
 									</div>
 									<div>
-										<label for="price">Product Price</label>
-										<label name="price" id="price"></label>
+										<span><b>Product Price:</b></span>
+										<span name="price" id="price"></span>
 									</div>
 									<div>
 										<label for="qty" class="ui-hidden-accessible">Quantity:</label>
 										<input type="number" name="qty" id="qty" value="" placeholder="quantity" data-theme="a">
 									</div>
 									
-									<button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Save</button>
+									<button type="submit"  class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" onclick="addSale()">Save</button>
 								</div>
 							</form>
 						</div> 
+
+
+						<div>
+							<ul data-role="listview" data-split-icon="gear" data-split-theme="a" data-inset="true" id="rec">
+							</ul>
+						</div>
+						<!-- <div data-role="popup" id="rec" data-theme="a" class="ui-corner-all">
+						<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+							<form>
+								<div style="padding:10px 20px;">
+									<h3>Receipt</h3>
+
+									<div>
+										<div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div>
+									</div>
+ -->
+									<!-- <div>
+										<label for="sid">Sale ID</label>
+										<label name="sid" id="sid"></label>
+									</div> -->
+									
+									<!-- <div>
+										<span><b>Product Name:</b></span>
+										<span name="pname" id="pname"></span>
+									</div>
+									<div>
+										<span><b>Product Price:</b></span>
+										<span name="price" id="price"></span>
+									</div>
+									<div>
+										<label for="qty" class="ui-hidden-accessible">Quantity:</label>
+										<input type="number" name="qty" id="qty" value="" placeholder="quantity" data-theme="a">
+									</div> -->
+									
+									<!-- <button type="submit"  class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" onclick="addSale()">Save</button> -->
+								<!-- </div>
+							</form>
+						</div>  -->
+
 					</div>
 			</form>
 			</div>
