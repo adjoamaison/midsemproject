@@ -1,5 +1,5 @@
 <?php
-	include("adb.php");
+	include_once("adb.php");
 	class product extends adb{
 
 		function addProduct($pid, $pname, $price, $qty){

@@ -16,21 +16,22 @@
 
 			function viewDay(){
 				var d = date.value;
-				var strUrl = "response.php?cmd=11&date="+d;
+				var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=11&date="+d;
 				var objResult=sendRequest(strUrl);
 
 				if(objResult.result==1){
 					var list = "";
 					for(var i = 0; i < objResult.trans.length; i++){
-						list += "<li class='ui-li-has-alt ui-li-has-thumb '>";
+						list += "<li class='ui-li-static ui-body-inherit'>";
 						list += "<p><b>Transaction ID: </b>"+objResult.trans[i].transid+"</p>";
 						list += "<p><b>Time: </b>"+objResult.trans[i]['time']+"</p>";
 						list += "<p><b>Customer's Contact: </b>"+objResult.trans[i].pnumber+"</p>";
-						list += "<p><b>Total Transaction: GHC </b>"+objResult.trans[i].total+"</p></li><br>";						
+						list += "<p><b>Total Transaction: GHC </b>"+objResult.trans[i].total+"</p></li>";						
 					}
 					$("#transactionList").html(list);
 				}
 			}
+
 		</script>
 	</head>
 	<body>

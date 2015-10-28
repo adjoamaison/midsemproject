@@ -9,25 +9,25 @@
 		<script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script src="cordova.js"></script>
 		<script>
-		function sendRequest(u){
-				var obj=$.ajax({url:u,async:false});
-				var result=$.parseJSON(obj.responseText);
-				return result;	//return object
+			function sendRequest(u){
+					var obj=$.ajax({url:u,async:false});
+					var result=$.parseJSON(obj.responseText);
+					return result;	//return object
 			}
-			var transid;
 
-		function addSale(){
+			var transid;
+			var tdate;
+			var timeT;
+			var prodId;
+
+			function addSale(){
 				var s=transid;
 				var n=$("#pname").html();
 				var pr=$("#price").html();
 				var q=$("#qty").val();
 				alert(q);
-				// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=7&sid="+s+
-				
-
-				// 	"&pname="+n+"&price="+pr+"&qty="+q;
-				var strUrl = "response.php?cmd=7&sid="+s+
-					"&pname="+n+"&price="+pr+"&qty="+q;
+				var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=7&sid="+s+
+					"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
 				var objResult=sendRequest(strUrl);
 				if(objResult.result==1){
 					alert("successfully saved.");
@@ -35,22 +35,15 @@
 
 				var dis="";
 				dis += "<a href='#'' class='ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star' onclick='addTrans()'>Done</a>";
-				dis+= "<a href='#rec' class='ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star'>Receipt</a>";
 				$("#btn").html(dis);
+
+				receipt();
 		}
 
 		function addTrans(){
-
-			var d = new Date();
-			var tdate = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-			var timeT = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+			var s = transid;			
 			var p=pnum.value;
-
-			$("#date").html(tdate);
-			$("#time").html(timeT);
-
-				// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&pnum="+p+"&date="+tdate+"&time="+timeT;
-				var strUrl = "response.php?cmd=8&pnum="+p+"&date="+tdate+"&time="+timeT;
+				var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
 				var objResult=sendRequest(strUrl);
 				if(objResult.result==1){
 					alert("successfully saved.");
@@ -59,30 +52,14 @@
 		
 
 		function genId(){
-			// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=6";
-			var strUrl = "response.php?cmd=6";
+			var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=6";
 			var objResult=sendRequest(strUrl);
-			// alert(objResult.result);
 			if(objResult.result==1){
 				transid = objResult.pass;
-				$("#tid").html(transid);
-				// alert("jdshfte");
-				// alert(transid+"tid");
 			}
 		}
 
 		$(document).ready(genId());
-
-
-		function genReceipt(){
-			var strUrl = "response.php?cmd=9&sid="+id;
-			var objResult=sendRequest(strUrl);
-			if(objResult.result==1){
-						// alert(objResult.product[0]['pname']);
-				$("#pname").html(objResult.product[0]['pname']);
-				$("#price").html(objResult.product[0]['price']);
-			}
-		}
 
 		function scan(){
 			// var strUrl = "response.php?cmd=4&pid="+1;
@@ -94,9 +71,8 @@
 			// 		}
 			cordova.plugins.barcodeScanner.scan(
 	      		function (result) {
-	      			var p = result.text;
-	                // var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=4&pid="+p;
-	                var strUrl = "response.php?cmd=4&pid="+p;
+	      			prodId = result.text;	                
+	                var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=4&pid="+prodId;
 	                var objResult=sendRequest(strUrl);
 					if(objResult.result==1){
 						// alert("successful.");
@@ -110,52 +86,53 @@
    			);
 		}
 
+		function setDate(){
+			var d = new Date();
+			tdate = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+			timeT = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
+			$("#date").html(tdate);
+			$("#time").html(timeT);
+		}
+
 		function receipt(){
+			setDate();
+
 			var id=transid;
-			var strUrl = "response.php?cmd=9&sid=";+id;
+			var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=9&sid="+id;
+			alert(id);
 	            var objResult=sendRequest(strUrl);
-	            alert("obj "+objResult.result);
+	            // alert("obj "+objResult.result);
 				if(objResult.result==1){
 					var list = "";
 					var total ="";
-					alert(objResult.sale.length+" length");
+					// alert(objResult.sale.length+" length");
 					for(var i = 0; i < objResult.sale.length; i++){
-						// alert("kjdsnfl");
-						list += "<li class='ui-li-has-icon'><a href='#'>";
-						// list+="somethingt";
-						// console.log("we+list");
+						list += "<li class='ui-li-static ui-body-inherit'>";
 						list += "<h2>"+objResult.sale[i].pname+"</h2>";
-						list += "<p>"+objResult.sale[i].price+"</p></a>";
+						list += "<p>"+objResult.sale[i].price+"</p>";
 						list += "<p>"+objResult.sale[i].qty+"</p></a></li>";
 						total += (objResult.sale[i]['price'] * objResult.sale[i]['qty']);
 					}
-					// alert(list);
 					$("#rec").html(list);
-					var strUrl = "response.php?cmd=10&sid="+id+"&total="+total;
-					// var strUrl = "response.php?cmd=10&sid=0STPF&total="+total;
+					var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=10&sid="+id+"&total="+total;
 				var objResult=sendRequest(strUrl);
 				if(objResult.result==1){
-					alert(total);
+					// alert(total+" ..total");
 					$("#total").html("GHC "+total);
 				}
 				}
-			
-
 		}
 		</script>
 	</head>
 	<body>
 		<div data-role="page" id="pageone" data-theme="c">
 			<div data-role="header">
-				<!-- <a href="#pageone" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-home">Home</a> -->
 				<h1>POS</h1>
-				<!-- <a href="#" data-role="button" class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check" onclick="addProduct()">Save</a> -->
 
 				<div data-role="navbar">
 					<ul>
-						<li><a href="index.html" data-icon="home" data-transition="pop">Dailies</a></li>
+						<li><a href="index.html" data-icon="shop" data-transition="pop">Dailies</a></li>
 						<li><a href="transaction.html" data-icon="plus" class="ui-btn-active" data-transition="flip" >Transaction</a></li>
-						<!-- <li><a href="edit.html" data-icon="edit" data-transition="fade">Edit</a></li> -->
 					</ul>
 				</div>
 			</div>
@@ -163,14 +140,7 @@
 			<div role="main" class="ui-content">
 
 				<form method="post">
-					<div data-role="fieldcontain" >
-						<!-- <div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div> -->
-						<!-- <div>
-							<label for="tid">Transresponse ID</label>
-							 <input type="text" name="tid" id="tid" ><disabled> 
-							<h5 name="tid" id="tid"></h5>
-						</div> -->
-						
+					<div data-role="fieldcontain" >						
 						<div>
 							<label for="pnum">Phone Number</label>
 							<input type="tel" name="pnum" placeholder="233123456789" id="pnum">
@@ -186,10 +156,8 @@
 							<span id="time"></span>
 						</div>
 						
-						<a href="#popupQty" data-rel="popup" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-forward" data-role="button" onclick="receipt()">Record Item</a>
+						<a href="#popupQty" data-rel="popup" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-grid">Scan Item</a>
 						<div id="btn">
-						<!-- <a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star" onclick="addTrans()">Done</a> -->
-						<!-- <a href="receipt.html?transid=" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star">Receipt</a> -->
 						</div>
 						<div data-role="popup" id="popupQty" data-theme="a" class="ui-corner-all">
 						<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
@@ -200,12 +168,6 @@
 									<div>
 										<div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div>
 									</div>
-
-									<!-- <div>
-										<label for="sid">Sale ID</label>
-										<label name="sid" id="sid"></label>
-									</div> -->
-									
 									<div>
 										<span><b>Product Name:</b></span>
 										<span name="pname" id="pname"></span>
@@ -219,49 +181,17 @@
 										<input type="number" name="qty" id="qty" value="" placeholder="quantity" data-theme="a">
 									</div>
 									
-									<button type="submit"  class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" onclick="addSale()">Save</button>
+									<a href="#" data-role="button" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" onclick="addSale()">Save</a>
 								</div>
 							</form>
 						</div> 
 
-
 						<div>
-							<ul data-role="listview" data-split-icon="gear" data-split-theme="a" data-inset="true" id="rec">
+							<ul data-role="listview" data-split-icon="gear" data-split-theme="a" data-inset="true"  class="ui-listview ui-listview-inset ui-corner-all ui-shadow" id="rec">
 							</ul>
 						</div>
-						<!-- <div data-role="popup" id="rec" data-theme="a" class="ui-corner-all">
-						<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-							<form>
-								<div style="padding:10px 20px;">
-									<h3>Receipt</h3>
 
-									<div>
-										<div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div>
-									</div>
- -->
-									<!-- <div>
-										<label for="sid">Sale ID</label>
-										<label name="sid" id="sid"></label>
-									</div> -->
-									
-									<!-- <div>
-										<span><b>Product Name:</b></span>
-										<span name="pname" id="pname"></span>
-									</div>
-									<div>
-										<span><b>Product Price:</b></span>
-										<span name="price" id="price"></span>
-									</div>
-									<div>
-										<label for="qty" class="ui-hidden-accessible">Quantity:</label>
-										<input type="number" name="qty" id="qty" value="" placeholder="quantity" data-theme="a">
-									</div> -->
-									
-									<!-- <button type="submit"  class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" onclick="addSale()">Save</button> -->
-								<!-- </div>
-							</form>
-						</div>  -->
-
+						<div id="total"></div>
 					</div>
 			</form>
 			</div>

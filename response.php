@@ -48,6 +48,9 @@
         case 11:
             allTransaction();
         break;
+        case 12:
+            // setDiscount();
+        break;
         default:
             echo '{"result":0,message:"unknown command"}';
         break;
@@ -109,12 +112,16 @@
             $pname = $_REQUEST["pname"];
             $price = $_REQUEST["price"];
             $qty = $_REQUEST["qty"];
+            $pid = $_REQUEST["pid"];
 
-            include("sales.php");
+            include_once("sales.php");
+            include_once("product.php");
             $obj=new sales();
+            $obj2=new product();
             
-            if($obj->addSales($sid, $pname,$price,$qty)) {               
-                echo '{"result":1}';        
+            if($obj->addSales($sid, $pname,$price,$qty)) {  
+                if($obj2->decrementQty($pid, $qty)){
+                echo '{"result":1}';   }     
             }
             else {
                 echo "{'result':0}";        
@@ -122,16 +129,15 @@
         }
 
         function addTransaction(){
-            // $s = $_REQUEST["sid"];
+            $s = $_REQUEST["sid"];
             $p = $_REQUEST["pnum"];
             $d = $_REQUEST["date"];
-            $t = $_REQUEST["time"];            
-            // $tt = $_REQUEST["tot"];
+            $t = $_REQUEST["time"];   
 
             include("trans.php");
             $obj=new trans();
             
-            if($obj->addTrans($d,$t,$p)) {               
+            if($obj->addTrans($s,$d,$t,$p)) {               
                 echo '{"result":1}';        
             }
             else {
@@ -174,39 +180,18 @@
             }
             // $obj->setTotal($p, $t);
             $discount = random_password(8);
-            if(!$obj->checkTotal($p, $t)){               
+            if(!$obj->checkTotal($p)){               
                 //return error
                 echo '{"result":0,"message": "did not work."}';
                 return;
             }
-            $row=$obj->fetch();
-            // echo '{"result":1,"products":[';    //start of json object
-                // echo json_encode($row);
-                // echo '{"result":1,"code": "'.$discount.'", "number":"'.$row['pnumber'].'"}';
-                 // echo $disount;              //if there are more rows, add comma 
-            // }
+            $row=$obj->fetch();            
             $msg = "Your Discount Code is: ".$discount;
             $pnum = $row['pnumber'];
-            // echo $msg ." " .$pnum;
-                    // sms($msg, $pnum);
-                       echo '{"result":1}'; 
-            
-            // echo "]}";
+            sms($msg,$pnum);
+            echo '{"result":1}'; 
         }
-        //  function addSms(){
-        //     $pnum = $_REQUEST["pnum"];
-        //     $message = $_REQUEST["message"];
-
-        //     $mess = explode(" ", $message);
-        //     include("reg.php");
-        //     $obj=new reg();
-        //     $msg = "Registration Successful";
-        //     $obj->addStud($mess[0], $mess[1], $mess[2], $mess[3],$mess[4],"+".$mess[5]);
-        //        sms($msg,$pnum);
-        //     echo '{"result":1}';
         
-        // }
-
         function generate_random_password($length = 10) {
             $alphabets = range('A','Z');
             $numbers = range('0','9');
@@ -223,7 +208,7 @@
             // return $password;
         }
 
-         function random_password($length = 10) {
+        function random_password($length = 10) {
             $alphabets = range('A','Z');
             $numbers = range('0','9');
             $additional_characters = array('_','.');
@@ -235,7 +220,6 @@
               $key = array_rand($final_array);
               $password .= $final_array[$key];
             }
-                // echo '{"result":1,"pass":"' .$password . '"}';
              return $password;
         }
 
@@ -322,7 +306,7 @@
                 $row = $obj->fetch();
                 $msg = $row['pname']+"<br>" + $row['price']+"<br>"+$row['qty'];
                 echo $msg;
-                // sms($msg,$pnum);
+                sms($msg,$pnum);
             }
             else{
                 echo '{"result":0}';
@@ -330,47 +314,20 @@
         }
 
         function setDiscount(){
+            $s=$_REQUEST['sid'];
+            $t=$_REQUEST['total'];
+
             include("trans.php");
             $obj = new trans();
 
-            if(!$obj->checkTotal($sid, $tot)){         
+            if(!$obj->checkTotal($s, $t)){         
                 echo '{"result":0,"message": "did not work."}';
                 return;
             }
             $row=$obj->fetch();
-            echo '{"result":1,"products":[';    //start of json object
-            // while($row){
-                echo json_encode($row);         //convert the result array to json object
-                // $row=$obj->fetch();
-                // if($row){
-                    // echo ",";                   //if there are more rows, add comma 
-                // }
-            // }
+            echo '{"result":1,"products":[';  
+            echo json_encode($row);      
             echo "]}";
-        }
-   
-        // function otl(){
-        //   SESSION_START();
-        //     $num = $_REQUEST["pnum"];
-        //     sms($_SESSION["PASS"],$num);
-        //     echo '{"result":1,"pass":"'.$_SESSION["PASS"].'"}';
-        //     // header("location:localhost/mwc/sms/otpass.html");
-        // }
-
-        // function otp(){
-        //     SESSION_START();
-        //     $pswd = $_REQUEST["pwd"];
-        //     //echo "url";
-        //     // echo $pswd;
-        //     // echo "<br>";
-        //     // echo $_SESSION["PASS"];
-        //     if($_SESSION["PASS"] == $pswd){
-        //         echo '{"result":1}';
-        //     }else{
-        //         echo '{"result":0}';
-        //     }
-
-        // }
-
-    
+            
+        }   
 ?>

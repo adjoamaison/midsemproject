@@ -7,10 +7,10 @@
  */
 
 define("DB_HOST", 'localhost');
-define("DB_NAME", 'midsem');
+define("DB_NAME", 'csashesi_agatha-maison');
 define("DB_PORT", 3306);
-define("DB_USER","root");
-define("DB_PWORD","");
+define("DB_USER","csashesi_am16");
+define("DB_PWORD","db!?7KVgS");
 
 define("LOG_LEVEL_SEC",0);
 define("LOG_LEVEL_DB_FAIL",0);
