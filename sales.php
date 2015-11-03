@@ -8,10 +8,10 @@
 			return $this->query($str_query);
 		}
 
-		// function deleteTrans($pid){
-		// 	$str_query = "delete from purchases where pid='$pid'";
-		// 	return $this->query($str_query);
-		// }
+		function deleteSale($pid){
+			$str_query = "delete from purchases where sid='$pid'";
+			return $this->query($str_query);
+		}
 
 		function editQuantity($pid, $qty){
 			$str_query = "update purchases set qty='$qty' where sid='$pid' ";
@@ -24,7 +24,7 @@
 		// }
 
 		function computeTotal($pid){
-			$str_query = "select price, qty from purchases where pid='$pid'";
+			$str_query = "select price, qty from purchases where transid='$pid'";
 			return $this->query($str_query);
 		}
 

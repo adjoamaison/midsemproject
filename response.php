@@ -1,6 +1,5 @@
 <?php
-// SESSION_START();
-    // require './Smsgh/Api.php';
+    require './Smsgh/Api.php';
     
     if(!isset($_REQUEST['cmd'])){
         echo '{"result":0,message:"unknown command"}';
@@ -10,49 +9,60 @@
     $cmd=$_REQUEST['cmd'];
     switch($cmd)
     {
-        case 1:
+        case 1:     //allows owner to add product to inventory
             add();  
         break;
 
-        case 2:
+        case 2:     //view all products
             viewAll();
         break;
     
-        case 3:
+        case 3:    //update a product
            update();
         break;
 
-        case 4:
+        case 4:    //get details of a product
            getProduct();
         break;
     
-        case 5:
+        case 5:    //sends sms to get stock level
             getStock();
         break;
         
-        case 6:
+        case 6:    //generate random id for transaction
             generate_random_password(5);
         break;
-        case 7:
+
+        case 7:    //add sale to db
             addSale();
         break;
-        case 8:
+
+        case 8:    //all transaction to db
             addTransaction();
         break;
-        case 9:
+
+        case 9:     //get all purchases with a given transaction id
             displaySale();
         break;
-        case 10:
+
+        case 10:    //set the total value of a transaction
             setTotal();
         break;
-        case 11:
+
+        case 11:    //display all transactions
             allTransaction();
         break;
+
         case 12:
-            // setDiscount();
+            deleteSale();
         break;
+
+        case 13:
+            editSale();
+        break;
+
         default:
-            echo '{"result":0,message:"unknown command"}';
+            echo '{"result":0,"message":"unknown command"}';
         break;
     }
 
@@ -119,7 +129,7 @@
             $obj=new sales();
             $obj2=new product();
             
-            if($obj->addSales($sid, $pname,$price,$qty)) {  
+            if($obj->addSales($sid, $pname,$price,$qty)) { 
                 if($obj2->decrementQty($pid, $qty)){
                 echo '{"result":1}';   }     
             }
@@ -188,7 +198,7 @@
             $row=$obj->fetch();            
             $msg = "Your Discount Code is: ".$discount;
             $pnum = $row['pnumber'];
-            sms($msg,$pnum);
+            // sms($msg,$pnum);
             echo '{"result":1}'; 
         }
         
@@ -271,17 +281,15 @@
         }
 
         function allTransaction(){
-            $d = $_REQUEST["date"];            
+            $d = $_REQUEST["date"];   
+
             include("trans.php");
             $obj = new trans();
             
-            if(!$obj->transDay($d)) {               
-                //return error
+            if(!$obj->transDay($d)) {  
                 echo '{"result":0,"message": "search did not work."}';
                 return;
             }
-            //at this point the search has been successful. 
-            //generate the JSON message to echo to the browser
             $row=$obj->fetch();
             echo '{"result":1,"trans":[';    //start of json object
             while($row){
@@ -306,7 +314,7 @@
                 $row = $obj->fetch();
                 $msg = $row['pname']+"<br>" + $row['price']+"<br>"+$row['qty'];
                 echo $msg;
-                sms($msg,$pnum);
+                // sms($msg,$pnum);
             }
             else{
                 echo '{"result":0}';
@@ -330,4 +338,32 @@
             echo "]}";
             
         }   
+
+        function deleteSale(){
+            $p = $_REQUEST["sid"];
+
+            include("sales.php");
+            $obj=new sales();
+            
+            if(!$obj->deleteSale($p)) {               
+                echo '{"result":0}';        
+            }
+            else {
+                echo '{"result":1}';
+            }
+        }
+
+         function editSale(){
+            $p = $_REQUEST["sid"];
+
+            include("sales.php");
+            $obj=new sales();
+            
+            if(!$obj->editSale($p)) {               
+                echo '{"result":0}';        
+            }
+            else {
+                echo '{"result":1}';
+            }
+        }
 ?>

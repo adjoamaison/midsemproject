@@ -2,137 +2,110 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-		<link rel="stylesheet" href="themes/mytheme.css" />
+		<link rel="stylesheet" href="themes/theme.css" />
   		<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
 		<link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 		<script src="jquery-2.1.4.min.js"></script>
 		<script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script src="cordova.js"></script>
+		<script src="functions.js"></script>
 		<script>
-			function sendRequest(u){
-					var obj=$.ajax({url:u,async:false});
-					var result=$.parseJSON(obj.responseText);
-					return result;	//return object
-			}
+			// window.onload()
+			// function sendRequest(u){
+			// 		var obj=$.ajax({url:u,async:false});
+			// 		var result=$.parseJSON(obj.responseText);
+			// 		return result;	//return object
+			// }
 
-			var transid;
-			var tdate;
-			var timeT;
-			var prodId;
+		// 	var transid;
+		// 	var tdate;
+		// 	var timeT;
+		// 	var prodId;
 
-			function addSale(){
-				var s=transid;
-				var n=$("#pname").html();
-				var pr=$("#price").html();
-				var q=$("#qty").val();
-				alert(q);
-				var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=7&sid="+s+
-					"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
-				var objResult=sendRequest(strUrl);
-				if(objResult.result==1){
-					alert("successfully saved.");
-				}
+		// 	function addSale(){
+		// 		var s=transid;
+		// 		var n=$("#pname").html();
+		// 		var pr=$("#price").html();
+		// 		var q=$("#qty").val();
+		// 		alert(q);
+		// 		// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=7&sid="+s+
+		// 		// 	"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
+		// 		var strUrl = "response.php?cmd=7&sid="+s+"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
+		// 		var objResult=sendRequest(strUrl);
+		// 		if(objResult.result==1){
+		// 			alert("successfully saved.");
+		// 		}
 
-				var dis="";
-				dis += "<a href='#'' class='ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star' onclick='addTrans()'>Done</a>";
-				$("#btn").html(dis);
+		// 		receipt();
 
-				receipt();
-		}
+		// 		var dis="";
+		// 		dis += "<a href='#' class='ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star' onclick='addTrans()'>Done</a>";
+		// 		$("#btn").html(dis);
+		// }
 
-		function addTrans(){
-			var s = transid;			
-			var p=pnum.value;
-				var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
-				var objResult=sendRequest(strUrl);
-				if(objResult.result==1){
-					alert("successfully saved.");
-				}
-		}
+		// function addTrans(){
+		// 	var s = transid;			
+		// 	var p=pnum.value;
+		// 	// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
+		// 	var strUrl = "response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
+		// 	var objResult=sendRequest(strUrl);
+		// 	if(objResult.result==1){
+		// 		alert("successfully saved.");
+		// 	}
+		// }
 		
 
-		function genId(){
-			var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=6";
-			var objResult=sendRequest(strUrl);
-			if(objResult.result==1){
-				transid = objResult.pass;
-			}
-		}
+		// function genId(){
+		// 	// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=6";
+		// 	var strUrl = "response.php?cmd=6";
+		// 	var objResult=sendRequest(strUrl);
+		// 	if(objResult.result==1){
+		// 		transid = objResult.pass;
+		// 	}
+		// 	setDate();
+		// }
 
-		$(document).ready(genId());
+		// $(document).ready(genId());
 
-		function scan(){
-			// var strUrl = "response.php?cmd=4&pid="+1;
-	  //               var objResult=sendRequest(strUrl);
-			// 		if(objResult.result==1){
-			// 			// alert(objResult.product[0]['pname']);
-			// 			$("#pname").html(objResult.product[0]['pname']);
-			// 			$("#price").html(objResult.product[0]['price']);
-			// 		}
-			cordova.plugins.barcodeScanner.scan(
-	      		function (result) {
-	      			prodId = result.text;	                
-	                var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=4&pid="+prodId;
-	                var objResult=sendRequest(strUrl);
-					if(objResult.result==1){
-						// alert("successful.");
-						$("#pname").val(objResult.product[0]['pname']);
-						$("#price").val(objResult.product[0]['price']);						
-					}
-	      		}, 
-	      		function (error) {
-	          		alert("Scanning failed: " + error);
-	      		}
-   			);
-		}
+		// function scan(){
+		// 	// var strUrl = "response.php?cmd=4&pid=1234";
 
-		function setDate(){
-			var d = new Date();
-			tdate = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-			timeT = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds();
-			$("#date").html(tdate);
-			$("#time").html(timeT);
-		}
+	 //  //               var objResult=sendRequest(strUrl);
 
-		function receipt(){
-			setDate();
+		// 	// 		if(objResult.result==1){
+		// 	// 			alert(objResult.product[0]['pname']);
+		// 	// 			$("#pname").val(objResult.product[0]['pname']);
+		// 	// 			$("#price").val(objResult.product[0]['price']);
+		// 	// 		}
+		// 	cordova.plugins.barcodeScanner.scan(
+	 //      		function (result) {
+	 //      			prodId = result.text;	                
+	 //                var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=4&pid="+prodId;
+	 //                var objResult=sendRequest(strUrl);
+		// 			if(objResult.result==1){
+		// 				// alert("successful.");
+		// 				$("#pname").val(objResult.product[0]['pname']);
+		// 				$("#price").val(objResult.product[0]['price']);						
+		// 			}
+	 //      		}, 
+	 //      		function (error) {
+	 //          		alert("Scanning failed: " + error);
+	 //      		}
+  //  			);
+		// }
 
-			var id=transid;
-			var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=9&sid="+id;
-			alert(id);
-	            var objResult=sendRequest(strUrl);
-	            // alert("obj "+objResult.result);
-				if(objResult.result==1){
-					var list = "";
-					var total ="";
-					// alert(objResult.sale.length+" length");
-					for(var i = 0; i < objResult.sale.length; i++){
-						list += "<li class='ui-li-static ui-body-inherit'>";
-						list += "<h2>"+objResult.sale[i].pname+"</h2>";
-						list += "<p>"+objResult.sale[i].price+"</p>";
-						list += "<p>"+objResult.sale[i].qty+"</p></a></li>";
-						total += (objResult.sale[i]['price'] * objResult.sale[i]['qty']);
-					}
-					$("#rec").html(list);
-					var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=10&sid="+id+"&total="+total;
-				var objResult=sendRequest(strUrl);
-				if(objResult.result==1){
-					// alert(total+" ..total");
-					$("#total").html("GHC "+total);
-				}
-				}
-		}
+		
 		</script>
 	</head>
 	<body>
 		<div data-role="page" id="pageone" data-theme="c">
 			<div data-role="header">
-				<h1>POS</h1>
+				<h1>My Shop's PoS</h1>
 
 				<div data-role="navbar">
 					<ul>
 						<li><a href="index.html" data-icon="shop" data-transition="pop">Dailies</a></li>
-						<li><a href="transaction.html" data-icon="plus" class="ui-btn-active" data-transition="flip" >Transaction</a></li>
+						<li><a href="#" data-icon="plus" class="ui-btn-active" data-transition="flip">Transaction</a></li>
 					</ul>
 				</div>
 			</div>
@@ -140,58 +113,65 @@
 			<div role="main" class="ui-content">
 
 				<form method="post">
-					<div data-role="fieldcontain" >						
-						<div>
-							<label for="pnum">Phone Number</label>
-							<input type="tel" name="pnum" placeholder="233123456789" id="pnum">
-						</div>
+					<div data-role="fieldcontain" >		
 
 						<div>
-							<span>Date:</span>
+							<span><b>Date:</b></span>
 							<span id="date"></span>
+						</div><br>
+
+						<div>
+							<span><b>Time:</b></span>
+							<span id="time"></span>
 						</div>
 
 						<div>
-							<span>Time:</span>
-							<span id="time"></span>
+							<!-- <label for="pnum"><b>Customer's Phone Number:</b></label> -->
+							<input type="tel" name="pnum" placeholder="phone number" id="pnum">
 						</div>
 						
 						<a href="#popupQty" data-rel="popup" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-grid">Scan Item</a>
-						<div id="btn">
-						</div>
+				
 						<div data-role="popup" id="popupQty" data-theme="a" class="ui-corner-all">
-						<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 							<form>
 								<div style="padding:10px 20px;">
-									<h3>Enter quantity</h3>
-
 									<div>
-										<div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div>
+										<div><a href="#" data-role="button"data-inline="true" data-icon="grid" onclick="scan()">SCAN</a></div><br>
 									</div>
 									<div>
-										<span><b>Product Name:</b></span>
-										<span name="pname" id="pname"></span>
+										<input name="pname" id="pname" value="" placeholder="Product name">
 									</div>
 									<div>
-										<span><b>Product Price:</b></span>
-										<span name="price" id="price"></span>
+										<input name="price" id="price" value="" placeholder="Price">
 									</div>
+									
 									<div>
 										<label for="qty" class="ui-hidden-accessible">Quantity:</label>
 										<input type="number" name="qty" id="qty" value="" placeholder="quantity" data-theme="a">
 									</div>
 									
-									<a href="#" data-role="button" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" onclick="addSale()">Save</a>
+									<a href="#" data-role="button" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" onclick="addSale()">Save</a>
 								</div>
 							</form>
 						</div> 
 
+
 						<div>
 							<ul data-role="listview" data-split-icon="gear" data-split-theme="a" data-inset="true"  class="ui-listview ui-listview-inset ui-corner-all ui-shadow" id="rec">
+
 							</ul>
 						</div>
 
 						<div id="total"></div>
+
+						<div id="btn"></div>
+						<div data-role='popup' id='purchase' data-theme='a' data-overlay-theme='b' class='ui-content' style='max-width:340px; padding-bottom:2em;'>
+							
+						</div>
+
+						<div data-role='popup' id='edits' data-theme='a' data-overlay-theme='b' class='ui-content' style='max-width:340px; padding-bottom:2em;'>
+							
+						</div>
 					</div>
 			</form>
 			</div>
@@ -200,4 +180,8 @@
 			</div>
 		</div>
 	</body>
+	<script >
+
+	$(document).ready(genId());
+	</script>
 </html>

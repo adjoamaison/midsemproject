@@ -2,46 +2,22 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-		<link rel="stylesheet" href="themes/mytheme.css" />
+		<link rel="stylesheet" href="themes/theme.css" />
   		<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
 		<link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 		<script src="jquery-2.1.4.min.js"></script>
 		<script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
-		<script>
-		function sendRequest(u){
-				var obj=$.ajax({url:u,async:false});
-				var result=$.parseJSON(obj.responseText);
-				return result;	//return object
-			}
-
-			function viewDay(){
-				var d = date.value;
-				var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=11&date="+d;
-				var objResult=sendRequest(strUrl);
-
-				if(objResult.result==1){
-					var list = "";
-					for(var i = 0; i < objResult.trans.length; i++){
-						list += "<li class='ui-li-static ui-body-inherit'>";
-						list += "<p><b>Transaction ID: </b>"+objResult.trans[i].transid+"</p>";
-						list += "<p><b>Time: </b>"+objResult.trans[i]['time']+"</p>";
-						list += "<p><b>Customer's Contact: </b>"+objResult.trans[i].pnumber+"</p>";
-						list += "<p><b>Total Transaction: GHC </b>"+objResult.trans[i].total+"</p></li>";						
-					}
-					$("#transactionList").html(list);
-				}
-			}
-
-		</script>
+		<script src="functions.js"></script>
 	</head>
+
 	<body>
-		<div data-role="page" id="pageone" data-theme="a">
+		<div data-role="page" id="pageone" data-theme="c">
 			<div data-role="header">
-				<h1>POS</h1>
+				<h1>My Shop's PoS</h1>
 				<div data-role="navbar">
 					<ul>
-						<li><a href="index.html" class="ui-btn-active" data-icon="shop" data-transition="pop">Dailies</a></li>
-						<li><a href="transaction.html" data-icon="plus"  data-transition="flip" >Transaction</a></li>
+						<li><a href="#" class="ui-btn-active" data-icon="shop" data-transition="pop">Dailies</a></li>
+						<li><a href="transaction.html" data-icon="plus" data-transition="flip" onclick="setDate()" data-ajax="false">Transaction</a></li>
 					</ul>
 				</div>
 			</div>
@@ -50,15 +26,15 @@
 				<form method="post">
 					<div data-role="fieldcontain">						
 						<div>
-							<label for="date">Date to Search</label>
+							<label for="date"><b>Date to Search<b></label>
 							<span>
 								<input type="text" name="date" placeholder="yyyy-mm-dd" id="date">
-								<a href="#" data-role="button" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-search" onclick="viewDay()">Search</a>
+								<a href="#" data-role="button" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-search" onclick="viewDailyTransaction()">Search</a>
 							</span>
 						</div>
 
 						<div>
-							<ul data-role="listview" data-split-icon="gear" data-split-theme="a" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" id="transactionList">
+							<ul data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" id="transactionList">
 							</ul>
 						</div>
 						
@@ -69,5 +45,7 @@
 				<h3>Inventory</h3>
 			</div>
 		</div>
+
+		
 	</body>
 </html>
