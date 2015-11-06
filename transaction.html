@@ -10,90 +10,6 @@
 		<script src="cordova.js"></script>
 		<script src="functions.js"></script>
 		<script>
-			// window.onload()
-			// function sendRequest(u){
-			// 		var obj=$.ajax({url:u,async:false});
-			// 		var result=$.parseJSON(obj.responseText);
-			// 		return result;	//return object
-			// }
-
-		// 	var transid;
-		// 	var tdate;
-		// 	var timeT;
-		// 	var prodId;
-
-		// 	function addSale(){
-		// 		var s=transid;
-		// 		var n=$("#pname").html();
-		// 		var pr=$("#price").html();
-		// 		var q=$("#qty").val();
-		// 		alert(q);
-		// 		// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=7&sid="+s+
-		// 		// 	"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
-		// 		var strUrl = "response.php?cmd=7&sid="+s+"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
-		// 		var objResult=sendRequest(strUrl);
-		// 		if(objResult.result==1){
-		// 			alert("successfully saved.");
-		// 		}
-
-		// 		receipt();
-
-		// 		var dis="";
-		// 		dis += "<a href='#' class='ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-star' onclick='addTrans()'>Done</a>";
-		// 		$("#btn").html(dis);
-		// }
-
-		// function addTrans(){
-		// 	var s = transid;			
-		// 	var p=pnum.value;
-		// 	// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
-		// 	var strUrl = "response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
-		// 	var objResult=sendRequest(strUrl);
-		// 	if(objResult.result==1){
-		// 		alert("successfully saved.");
-		// 	}
-		// }
-		
-
-		// function genId(){
-		// 	// var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=6";
-		// 	var strUrl = "response.php?cmd=6";
-		// 	var objResult=sendRequest(strUrl);
-		// 	if(objResult.result==1){
-		// 		transid = objResult.pass;
-		// 	}
-		// 	setDate();
-		// }
-
-		// $(document).ready(genId());
-
-		// function scan(){
-		// 	// var strUrl = "response.php?cmd=4&pid=1234";
-
-	 //  //               var objResult=sendRequest(strUrl);
-
-		// 	// 		if(objResult.result==1){
-		// 	// 			alert(objResult.product[0]['pname']);
-		// 	// 			$("#pname").val(objResult.product[0]['pname']);
-		// 	// 			$("#price").val(objResult.product[0]['price']);
-		// 	// 		}
-		// 	cordova.plugins.barcodeScanner.scan(
-	 //      		function (result) {
-	 //      			prodId = result.text;	                
-	 //                var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=4&pid="+prodId;
-	 //                var objResult=sendRequest(strUrl);
-		// 			if(objResult.result==1){
-		// 				// alert("successful.");
-		// 				$("#pname").val(objResult.product[0]['pname']);
-		// 				$("#price").val(objResult.product[0]['price']);						
-		// 			}
-	 //      		}, 
-	 //      		function (error) {
-	 //          		alert("Scanning failed: " + error);
-	 //      		}
-  //  			);
-		// }
-
 		
 		</script>
 	</head>
@@ -126,7 +42,6 @@
 						</div>
 
 						<div>
-							<!-- <label for="pnum"><b>Customer's Phone Number:</b></label> -->
 							<input type="tel" name="pnum" placeholder="phone number" id="pnum">
 						</div>
 						

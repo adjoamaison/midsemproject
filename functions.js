@@ -36,20 +36,20 @@ function setDate(){
 
 function addSale(){
 	var s=transid;
-	var n=$("#pname").html();
-	var pr=$("#price").html();
+	var n=$("#pname").val();
+	var pr=$("#price").val();
 	var q=$("#qty").val();
 	var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=7&sid="+s+
 		"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
 	// var strUrl = "response.php?cmd=7&sid="+s+"&pname="+n+"&price="+pr+"&qty="+q+"&pid="+prodId;
 	var objResult=sendRequest(strUrl);
 	if(objResult.result==1){
-		alert("successfully saved.");
+		alert("sale saved.");
 	}
 	receipt();
-	$("#pname").val("");
-	$("#price").val("");
-	$("#qty").val("");
+	$("#pname").html("");
+	$("#price").html("");
+	$("#qty").html("");
 }
 
 function addTrans(){
@@ -59,7 +59,7 @@ function addTrans(){
 	// var strUrl = "response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
 	var objResult=sendRequest(strUrl);
 	if(objResult.result==1){
-		alert("successfully saved.");
+		alert("Transaction saved.");
 	}
 }
 
@@ -142,29 +142,4 @@ function deleteSale(id){
 	}
 }
 
-		 function scan(){
-		// 	// var strUrl = "response.php?cmd=4&pid=1234";
-
-	 //  //               var objResult=sendRequest(strUrl);
-
-		// 	// 		if(objResult.result==1){
-		// 	// 			alert(objResult.product[0]['pname']);
-		// 	// 			$("#pname").val(objResult.product[0]['pname']);
-		// 	// 			$("#price").val(objResult.product[0]['price']);
-		// 	// 		}
-			cordova.plugins.barcodeScanner.scan(
-	      		function (result) {
-	      			prodId = result.text;	                
-	                var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=4&pid="+prodId;
-	                var objResult=sendRequest(strUrl);
-					if(objResult.result==1){
-						// alert("successful.");
-						$("#pname").val(objResult.product[0]['pname']);
-						$("#price").val(objResult.product[0]['price']);						
-					}
-	      		}, 
-	      		function (error) {
-	          		alert("Scanning failed: " + error);
-	      		}
-   			);
-		}
+		
