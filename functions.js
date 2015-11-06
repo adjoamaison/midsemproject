@@ -109,7 +109,7 @@ function receipt(){
 		}
 		$("#rec").html(list);
 		var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=10&sid="+id+"&total="+total;
-		var strUrl = "response.php?cmd=10&sid="+id+"&total="+total;
+		// var strUrl = "response.php?cmd=10&sid="+id+"&total="+total;
 		var objResult=sendRequest(strUrl);
 		if(objResult.result==1){
 			$("#total").html("<b>TOTAL: </b>GHC "+total);
