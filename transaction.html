@@ -9,7 +9,11 @@
 		<script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script src="cordova.js"></script>
 		<script src="functions.js"></script>
-		<script>
+		<script type="text/javascript" charset="utf-8">
+
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
 		
 		</script>
 	</head>
@@ -45,7 +49,7 @@
 							<input type="tel" name="pnum" placeholder="phone number" id="pnum">
 						</div>
 						
-						<a href="#popupQty" data-rel="popup" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-grid">Scan Item</a>
+						<a href="#popupQty" data-rel="popup" onclick="clear()" data-position-to="window" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-grid">Scan Item</a>
 				
 						<div data-role="popup" id="popupQty" data-theme="a" class="ui-corner-all">
 							<form>

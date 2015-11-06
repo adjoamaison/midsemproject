@@ -2,9 +2,9 @@
 	include("adb.php");
 	class trans extends adb{
 
-		function addTrans($s, $date, $time, $pnum){
+		function addTrans($s, $date, $time, $pnum, $t){
 			$str_query = "insert into transaction set transid='$s', date='$date',
-			 time='$time', pnumber='$pnum'";
+			 time='$time', pnumber='$pnum', total='$t'";
 			return $this->query($str_query);
 		}
 

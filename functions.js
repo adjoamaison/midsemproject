@@ -1,5 +1,5 @@
 var transid, tdate, timeT, prodId;
-
+var total=0;
 function sendRequest(u){
 	var obj=$.ajax({url:u,async:false});
 	var result=$.parseJSON(obj.responseText);
@@ -55,7 +55,7 @@ function addSale(){
 function addTrans(){
 	var s = transid;			
 	var p=pnum.value;
-	var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
+	var strUrl = "http://cs.ashesi.edu.gh/~csashesi/class2016/agatha-maison/MWC/response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT+"&total="+total;
 	// var strUrl = "response.php?cmd=8&sid="+s+"&pnum="+p+"&date="+tdate+"&time="+timeT;
 	var objResult=sendRequest(strUrl);
 	if(objResult.result==1){
@@ -97,7 +97,6 @@ function receipt(){
 	var objResult=sendRequest(strUrl);
 	if(objResult.result==1){
 		var list = "";
-		var total=0;
 		for(var i = 0; i < objResult.sale.length; i++){
 			list += "<li class='ui-listview ui-listview-inset ui-corner-all ui-shadow' data-theme='b'>";
 			list += "<h2>"+objResult.sale[i].pname+"</h2>";
@@ -141,5 +140,3 @@ function deleteSale(id){
 		receipt();
 	}
 }
-
-		

@@ -5,14 +5,12 @@
         echo '{"result":0,message:"unknown command"}';
         exit();
     }
-
     $cmd=$_REQUEST['cmd'];
     switch($cmd)
     {
         case 1:     //allows owner to add product to inventory
             add();  
         break;
-
         case 2:     //view all products
             viewAll();
         break;
@@ -20,7 +18,6 @@
         case 3:    //update a product
            update();
         break;
-
         case 4:    //get details of a product
            getProduct();
         break;
@@ -32,47 +29,37 @@
         case 6:    //generate random id for transaction
             generate_random_password(5);
         break;
-
         case 7:    //add sale to db
             addSale();
         break;
-
         case 8:    //all transaction to db
             addTransaction();
         break;
-
         case 9:     //get all purchases with a given transaction id
             displaySale();
         break;
-
         case 10:    //set the total value of a transaction
             setTotal();
         break;
-
         case 11:    //display all transactions
             allTransaction();
         break;
-
         case 12:
             deleteSale();
         break;
-
         case 13:
             editSale();
         break;
-
         default:
             echo '{"result":0,"message":"unknown command"}';
         break;
     }
-
     
         function add(){
             $pid = $_REQUEST["pid"];
             $pname = $_REQUEST["pname"];
             $price = $_REQUEST["price"];
             $qty = $_REQUEST["qty"];
-
             include("product.php");
             $obj=new product();
             
@@ -83,13 +70,11 @@
                 echo "{'result':0}";        
             }
         }
-
         function update(){
             $pid = $_REQUEST["pid"];
             $pname = $_REQUEST["pname"];
             $price = $_REQUEST["price"];
             $qty = $_REQUEST["qty"];
-
             include("product.php");
             $obj=new product();
             
@@ -100,7 +85,6 @@
                 echo "{'result':0}";        
             }
         }
-
         function getProduct(){
             $pid = $_REQUEST["pid"];
             include("product.php");
@@ -116,14 +100,12 @@
             echo "]}";        
             }
         }
-
         function addSale(){
             $sid = $_REQUEST["sid"];
             $pname = $_REQUEST["pname"];
             $price = $_REQUEST["price"];
             $qty = $_REQUEST["qty"];
             $pid = $_REQUEST["pid"];
-
             include_once("sales.php");
             include_once("product.php");
             $obj=new sales();
@@ -137,27 +119,33 @@
                 echo "{'result':0}";        
             }
         }
-
         function addTransaction(){
             $s = $_REQUEST["sid"];
             $p = $_REQUEST["pnum"];
             $d = $_REQUEST["date"];
             $t = $_REQUEST["time"];   
-
+            $tt = $_REQUEST["total"];
             include("trans.php");
             $obj=new trans();
             
-            if($obj->addTrans($s,$d,$t,$p)) {               
-                echo '{"result":1}';        
+            if($obj->addTrans($s,$d,$t,$p,$tt)) {  
+                if($obj->checkTotal($s)){ 
+
+                    $discount = random_password(8);
+                    $row=$obj->fetch();            
+                    $msg = "Your Discount Code is: ".$discount;
+                    $pnum = $row['pnumber'];
+                    
+                }
+                echo '{"result":1}'; 
+                sms($msg,$pnum);       
             }
             else {
-                echo "{'result':0}";        
+                echo '{"result":0}';        
             }
         }
-
         function displaySale(){
             $p = $_REQUEST["sid"];
-
             include("sales.php");
             $obj=new sales();
             
@@ -177,14 +165,11 @@
             echo "]}";        
             }
         }
-
         function setTotal(){
             $p = $_REQUEST["sid"];
             $t = $_REQUEST["total"];
-
             include("trans.php");
             $obj=new trans();
-
             if(!$obj->setTotal($p, $t)) {               
                 echo '{"result":0}';        
             }
@@ -198,7 +183,7 @@
             $row=$obj->fetch();            
             $msg = "Your Discount Code is: ".$discount;
             $pnum = $row['pnumber'];
-            // sms($msg,$pnum);
+            sms($msg,$pnum);
             echo '{"result":1}'; 
         }
         
@@ -217,7 +202,6 @@
                 echo '{"result":1,"pass":"' .$password . '"}';
             // return $password;
         }
-
         function random_password($length = 10) {
             $alphabets = range('A','Z');
             $numbers = range('0','9');
@@ -232,18 +216,15 @@
             }
              return $password;
         }
-
         function sms($msg, $num){
             //Here we assume the user is using the combination of his clientId and clientSecret as credentials
-            $auth = new BasicAuth("jokyhrvs", "volkzmqn");
-
+            $auth = new BasicAuth("igkoydll", "dngiqlfo");
             // instance of ApiHost
             $apiHost = new ApiHost($auth);
             $enableConsoleLog = FALSE;
             $messagingApi = new MessagingApi($apiHost, $enableConsoleLog);
             try {
                 $messageResponse = $messagingApi->sendQuickMessage("MyStore", $num, $msg);
-
                 if ($messageResponse instanceof MessageResponse) {
                     //echo 
                     $messageResponse->getStatus();
@@ -256,7 +237,6 @@
                 $ex->getTraceAsString();
             }
         }
-
         function viewAll(){
             include("product.php");
             $obj = new product();
@@ -279,10 +259,8 @@
             }
             echo "]}";
         }
-
         function allTransaction(){
             $d = $_REQUEST["date"];   
-
             include("trans.php");
             $obj = new trans();
             
@@ -301,12 +279,10 @@
             }
             echo "]}";
         }
-
         function getStock(){
             $message = $_REQUEST["message"];
             $mess = explode(" ", $message);
             $pnum = $_REQUEST["pnum"];
-
             include("product.php");
             $obj = new product();
             
@@ -320,14 +296,11 @@
                 echo '{"result":0}';
             }
         }
-
         function setDiscount(){
             $s=$_REQUEST['sid'];
             $t=$_REQUEST['total'];
-
             include("trans.php");
             $obj = new trans();
-
             if(!$obj->checkTotal($s, $t)){         
                 echo '{"result":0,"message": "did not work."}';
                 return;
@@ -338,10 +311,8 @@
             echo "]}";
             
         }   
-
         function deleteSale(){
             $p = $_REQUEST["sid"];
-
             include("sales.php");
             $obj=new sales();
             
@@ -352,10 +323,8 @@
                 echo '{"result":1}';
             }
         }
-
          function editSale(){
             $p = $_REQUEST["sid"];
-
             include("sales.php");
             $obj=new sales();
             
